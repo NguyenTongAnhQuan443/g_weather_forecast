@@ -14,7 +14,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     emit(WeatherLoading());
     try {
       final weather = await weatherRepository.getCurrentWeather(event.city);
-      emit(WeatherLoaded(weather));
+      final forecast = await weatherRepository.getForecast(event.city, event.forecastDays + 1);
+      emit(WeatherLoaded(weather, forecast));
     } catch (e) {
       emit(WeatherError('Không tìm thấy hoặc lỗi kết nối!'));
     }
