@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:g_weather_forecast/core/constants/app_styles.dart';
 import '../../data/models/forecast_day_model.dart';
 import 'forecast_card.dart';
 
@@ -35,7 +36,7 @@ class ForecastRow extends StatelessWidget {
                 onPressed: onSeeMore,
                 child: const Text('See more', style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: AppColors.primary,
                   minimumSize: Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

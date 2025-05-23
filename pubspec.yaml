@@ -52,6 +52,11 @@ dev_dependencies:
   geocoding: ^3.0.0
 #  shared_preferences
   shared_preferences: ^2.5.3
+#  firebae
+  firebase_core: ^3.13.1
+  firebase_messaging: ^15.2.6
+#  flutter_local_notifications
+  flutter_local_notifications: ^19.2.1
 #  Icon
   flutter_launcher_icons: ^0.13.1
 flutter_icons:
