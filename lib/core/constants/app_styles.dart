@@ -6,7 +6,6 @@ class AppColors {
   static const background = Color(0xFFE3F2FD);
   static const grayapp = Color(0xFF6C757D);
   static const textWhite = Colors.white;
-// ...thêm các màu khác nếu muốn
 }
 
 class AppTextStyles {
@@ -14,12 +13,11 @@ class AppTextStyles {
     fontSize: 24,
     fontWeight: FontWeight.bold,
     color: AppColors.primary,
-    fontFamily: 'Rubik', // nếu bạn có custom font
+    fontFamily: 'Rubik',
   );
   static const body = TextStyle(
     fontSize: 16,
     color: AppColors.textWhite,
     fontFamily: 'Rubik',
   );
-// ...thêm style khác nếu muốn
 }

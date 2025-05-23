@@ -1,47 +1,33 @@
 # GOLDEN OWL SOLUTIONS - TEST Intern
+## Nguyễn Tống Anh Quân - Email: ntanhquan.sly@gmail.com
 ## Project Structure
 
 ```
 lib/
-│
-├── core/                  
-│   ├── constants/         # Hằng số (API key, base URL, colors...)
-│   ├── theme/             # Định nghĩa theme, font, app style
-│   ├── utils/             # Tiện ích dùng chung (date, string...)
-│   └── base/              # Base class (BaseViewModel, ...)
-│
+├── bloc/
+│   └── weather/
+│       ├── weather_bloc.dart
+│       ├── weather_event.dart
+│       └── weather_state.dart
 ├── data/
-│   ├── models/            # Định nghĩa model (Weather, User, Forecast, ...)
-│   ├── datasources/       
-│   │   ├── remote/        # Gọi API (WeatherApiService, AuthService...)
-│   │   └── local/         # Lưu local (SharedPreferences, History...)
-│   └── repositories/      # Repository pattern (WeatherRepository, UserRepository...)
-│
-├── domain/                # Tầng này có thể dùng nếu muốn clean arch sâu hơn
-│   ├── entities/
-│   └── usecases/          # GetWeather, RegisterEmail...
-│
+│   ├── models/
+│   │   └── weather_model.dart
+│   ├── datasources/
+│   └── repositories/
 ├── view/
-│   ├── screens/           # Mỗi màn hình là 1 folder riêng
-│   │   ├── home/          # Trang chính (search, display weather, forecast)
-│   │   ├── auth/          # Đăng ký email, xác thực
-│   │   ├── history/       # Hiển thị lịch sử tìm kiếm
-│   │   └── splash/        # Logo intro, loading
-│   └── widgets/           # Các widget dùng chung (WeatherCard, SearchBar, ...)
-│
-├── viewmodels/            # Các ViewModel (Home, Auth, History...)
-│   ├── home_viewmodel.dart
-│   ├── auth_viewmodel.dart
-│   └── history_viewmodel.dart
-│
-├── services/              # Service dùng chung (API, Email, Storage, Notification...)
-│   ├── api_service.dart
-│   ├── email_service.dart
-│   └── storage_service.dart
-│
-├── main.dart              # Entry point
-├── injection.dart         # Inject các service, repository, viewmodel (get_it)
-└── app.dart               # Widget MaterialApp, set up theme/font/provider
+│   └── screens/
+│       └── home_screen.dart
+└── main.dart
+
+```
+### Description
+```
+Language: Flutter
+Fonts (optional): https://fonts.google.com/specimen/Rubik?query=Rubik
+Store data: Shared Preferences
+OOP programming for object-oriented languages
+Form validation: True
+State management: Bloc
 ```
 ### Home Screen - Web Screen
 ![mobile_home_screen.png](assets%2Fdemo%2Fmobile_home_screen.png)
