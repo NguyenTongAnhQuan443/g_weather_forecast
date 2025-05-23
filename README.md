@@ -1,6 +1,6 @@
 # GOLDEN OWL SOLUTIONS - TEST Intern
 ## Nguyễn Tống Anh Quân - Email: ntanhquan.sly@gmail.com
-## Project Structure
+## 1) Project Structure
 
 ```
 lib/
@@ -20,7 +20,7 @@ lib/
 └── main.dart
 
 ```
-### Description
+### 2) Description
 ```
 - Search for a city or country and display weather information:
     - Show the weather includes temperature, wind speed, humidity... for present day.
@@ -40,6 +40,6 @@ Form validation: True
 State management: Bloc
 ```
 
-### Home Screen - Web Screen
-![mobile_home_screen.png](assets%2Fdemo%2Fmobile_home_screen.png)
+### 3) Home Screen - Web Screen
 ![web_home_srceen.png](assets%2Fdemo%2Fweb_home_srceen.png)
+![mobile_home_screen.png](assets%2Fdemo%2Fmobile_home_screen.png)

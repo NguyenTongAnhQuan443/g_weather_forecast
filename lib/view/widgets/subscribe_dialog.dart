@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_styles.dart';
+import '../../data/datasources/local/email_prefs.dart';
+import '../../data/datasources/remote/weather_subscription_api.dart';
+import '../../data/datasources/local/email_prefs.dart';
+import 'package:geolocator/geolocator.dart';
 
 // Widget hiển thị hộp thoại đăng ký nhận thông báo thời tiết
 class SubscribeDialog extends StatefulWidget {
@@ -12,6 +16,70 @@ class SubscribeDialog extends StatefulWidget {
 
 class _SubscribeDialogState extends State<SubscribeDialog> {
   final TextEditingController emailController = TextEditingController();
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    EmailPrefs.loadEmail().then((email) {
+      if (email != null) {
+        emailController.text = email;
+      }
+    });
+  }
+
+  Future<void> _handleSubscribe(bool subscribe) async {
+    final email = emailController.text.trim();
+    if (email.isEmpty || !email.contains('@')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid email!')),
+      );
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    if (subscribe) {
+      // Lấy vị trí hiện tại để gửi cùng email
+      try {
+        final pos = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.medium);
+        final result = await WeatherSubscriptionApi.subscribe(
+            email, pos.latitude, pos.longitude);
+        if (result) {
+          await EmailPrefs.saveEmail(email);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content:
+                    Text('Đăng ký thành công! Hãy kiểm tra email xác nhận.')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Đăng ký thất bại, thử lại sau.')),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Không lấy được vị trí hiện tại!')),
+        );
+      }
+    } else {
+      final result = await WeatherSubscriptionApi.unsubscribe(email);
+      if (result) {
+        await EmailPrefs.removeEmail();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Đã hủy đăng ký thành công!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Hủy đăng ký thất bại, thử lại sau.')),
+        );
+      }
+    }
+
+    setState(() => isLoading = false);
+    widget.onSubmit(email, subscribe);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,44 +109,41 @@ class _SubscribeDialogState extends State<SubscribeDialog> {
           children: [
             Expanded(
               child: TextButton(
-                onPressed: () {
-                  final email = emailController.text.trim();
-                  if (email.isEmpty || !email.contains('@')) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Invalid email!')),
-                    );
-                    return;
-                  }
-                  widget.onSubmit(email, false); // Unsubscribe
-                },
-                child: Text('Unsubscribe'),
+                onPressed: isLoading ? null : () => _handleSubscribe(false),
+                child: isLoading
+                    ? SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text('Unsubscribe'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.grayapp,
                   foregroundColor: Colors.white,
                   minimumSize: Size(double.infinity, 45),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
               ),
             ),
             SizedBox(width: 10),
             Expanded(
               child: ElevatedButton(
-                onPressed: () {
-                  final email = emailController.text.trim();
-                  if (email.isEmpty || !email.contains('@')) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Invalid email!')),
-                    );
-                    return;
-                  }
-                  widget.onSubmit(email, true); // Subscribe
-                },
-                child: Text('Subscribe'),
+                onPressed: isLoading ? null : () => _handleSubscribe(true),
+                child: isLoading
+                    ? SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: Colors.white),
+                      )
+                    : Text('Subscribe'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                   minimumSize: Size(double.infinity, 45),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
               ),
             ),
