@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/datasources/local/weather_history_service.dart';
 import 'weather_event.dart';
 import 'weather_state.dart';
 import '../../data/repositories/weather_repository.dart';
@@ -15,6 +16,10 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     try {
       final weather = await weatherRepository.getCurrentWeather(event.city);
       final forecast = await weatherRepository.getForecast(event.city, event.forecastDays + 1);
+
+      // Lưu lịch sử sau khi load thành công
+      await WeatherHistoryService.saveWeatherToHistory(weather);
+
       emit(WeatherLoaded(weather, forecast));
     } catch (e) {
       emit(WeatherError('Không tìm thấy hoặc lỗi kết nối!'));

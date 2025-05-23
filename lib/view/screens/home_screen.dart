@@ -4,6 +4,7 @@ import '../../bloc/weather/weather_bloc.dart';
 import '../../bloc/weather/weather_event.dart';
 import '../../bloc/weather/weather_state.dart';
 import '../../core/constants/app_styles.dart';
+import '../../data/datasources/local/weather_history_service.dart';
 import '../widgets/current_weather_card.dart';
 import '../widgets/forecast_row.dart';
 import '../widgets/search_panel.dart';
@@ -118,6 +119,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //   title: const Text(
+      //     'Weather Dashboard',
+      //     style: TextStyle(
+      //         color: AppColors.textWhite, fontWeight: FontWeight.bold),
+      //   ),
+      //   backgroundColor: AppColors.primary,
+      //   centerTitle: true,
+      // ),
       appBar: AppBar(
         title: const Text(
           'Weather Dashboard',
@@ -126,7 +136,57 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         backgroundColor: AppColors.primary,
         centerTitle: true,
+        actions: [
+          PopupMenuButton<int>(
+            icon: Icon(Icons.more_horiz, color: AppColors.textWhite),
+            onSelected: (value) async {
+              if (value == 1) {
+                // Ở đây mở dialog lịch sử
+                final history = await WeatherHistoryService.getTodayWeatherHistory();
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text('Lịch sử tìm kiếm hôm nay'),
+                    content: SizedBox(
+                      width: 300,
+                      height: 350,
+                      child: history.isEmpty
+                          ? Text('Chưa có lịch sử tìm kiếm nào trong ngày.')
+                          : ListView.builder(
+                        itemCount: history.length,
+                        itemBuilder: (ctx, i) {
+                          final item = history[i];
+                          return ListTile(
+                            leading: Image.network(item.iconUrl, width: 32, height: 32),
+                            title: Text(item.cityName),
+                            subtitle: Text(
+                              'Nhiệt độ: ${item.temperatureC}°C\n'
+                                  'Thời gian: ${item.localtime}',
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        child: Text('Đóng'),
+                        onPressed: () => Navigator.of(context).pop(),
+                      )
+                    ],
+                  ),
+                );
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 1,
+                child: Text('Xem lịch sử hôm nay'),
+              ),
+            ],
+          ),
+        ],
       ),
+
       body: LayoutBuilder(
         builder: (context, constraints) {
 

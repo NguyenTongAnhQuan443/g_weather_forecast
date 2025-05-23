@@ -50,8 +50,10 @@ dev_dependencies:
 #  GPS
   geolocator: ^10.1.0
   geocoding: ^3.0.0
+#  shared_preferences
+  shared_preferences: ^2.5.3
 #  Icon
-  flutter_launcher_icons: ^0.13.1 # ← thêm dòng này
+  flutter_launcher_icons: ^0.13.1
 flutter_icons:
   android: true
   ios: true
