@@ -31,6 +31,13 @@ class _HomeScreenState extends State<HomeScreen> {
   String _lastSearchedCity = '';
 
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      _useCurrentLocation();
+    });
+  }
+  @override
   void dispose() {
     _searchController.dispose();
     _scrollController.dispose();
