@@ -16,7 +16,8 @@ class SubscribeDialog extends StatefulWidget {
 
 class _SubscribeDialogState extends State<SubscribeDialog> {
   final TextEditingController emailController = TextEditingController();
-  bool isLoading = false;
+  bool isLoadingSubscribe = false;
+  bool isLoadingUnsubscribe = false;
 
   @override
   void initState() {
@@ -28,6 +29,13 @@ class _SubscribeDialogState extends State<SubscribeDialog> {
     });
   }
 
+  // Regex Email
+  bool _isValidEmail(String email) {
+    final RegExp regex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+    return regex.hasMatch(email);
+  }
+
+  // handle đăng ký và hủy đăng ký
   Future<void> _handleSubscribe(bool subscribe) async {
     final email = emailController.text.trim();
     if (email.isEmpty || !email.contains('@')) {
@@ -37,7 +45,13 @@ class _SubscribeDialogState extends State<SubscribeDialog> {
       return;
     }
 
-    setState(() => isLoading = true);
+    setState(() {
+      if (subscribe) {
+        isLoadingSubscribe = true;
+      } else {
+        isLoadingUnsubscribe = true;
+      }
+    });
 
     if (subscribe) {
       // Lấy vị trí hiện tại để gửi cùng email
@@ -50,17 +64,17 @@ class _SubscribeDialogState extends State<SubscribeDialog> {
           await EmailPrefs.saveEmail(email);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content:
-                    Text('Đăng ký thành công! Hãy kiểm tra email xác nhận.')),
+                content: Text(
+                    'Registration successful! Please check your confirmation email.')),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Đăng ký thất bại, thử lại sau.')),
+            SnackBar(content: Text('Registration failed, try again later.')),
           );
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Không lấy được vị trí hiện tại!')),
+          SnackBar(content: Text('Cannot get current location!')),
         );
       }
     } else {
@@ -68,16 +82,19 @@ class _SubscribeDialogState extends State<SubscribeDialog> {
       if (result) {
         await EmailPrefs.removeEmail();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Đã hủy đăng ký thành công!')),
+          SnackBar(content: Text('Unsubscribe successfully!')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Hủy đăng ký thất bại, thử lại sau.')),
+          SnackBar(content: Text('Cancellation failed, try again later.')),
         );
       }
     }
 
-    setState(() => isLoading = false);
+    setState(() {
+      isLoadingSubscribe = false;
+      isLoadingUnsubscribe = false;
+    });
     widget.onSubmit(email, subscribe);
   }
 
@@ -109,8 +126,10 @@ class _SubscribeDialogState extends State<SubscribeDialog> {
           children: [
             Expanded(
               child: TextButton(
-                onPressed: isLoading ? null : () => _handleSubscribe(false),
-                child: isLoading
+                onPressed: (isLoadingSubscribe || isLoadingUnsubscribe)
+                    ? null
+                    : () => _handleSubscribe(false),
+                child: isLoadingUnsubscribe
                     ? SizedBox(
                         width: 18,
                         height: 18,
@@ -129,8 +148,10 @@ class _SubscribeDialogState extends State<SubscribeDialog> {
             SizedBox(width: 10),
             Expanded(
               child: ElevatedButton(
-                onPressed: isLoading ? null : () => _handleSubscribe(true),
-                child: isLoading
+                onPressed: (isLoadingSubscribe || isLoadingUnsubscribe)
+                    ? null
+                    : () => _handleSubscribe(true),
+                child: isLoadingSubscribe
                     ? SizedBox(
                         width: 18,
                         height: 18,
