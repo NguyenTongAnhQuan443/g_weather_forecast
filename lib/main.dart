@@ -9,8 +9,8 @@ import 'data/repositories/weather_repository.dart';
 import 'view/screens/home_screen.dart';
 
 Future<void> main() async {
-  await dotenv.load(fileName: ".env");
-  print(dotenv.env['WEATHER_API_KEY']);
+  // await dotenv.load(fileName: "assets/.env");
+  // print(dotenv.env['WEATHER_API_KEY']);
   final weatherRepository = WeatherRepository(WeatherApiService());
   runApp(
     BlocProvider(

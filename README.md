@@ -1,5 +1,12 @@
 # GOLDEN OWL SOLUTIONS - TEST Intern
 ## Nguyễn Tống Anh Quân - Email: ntanhquan.sly@gmail.com
+## 0) Demo
+```
+Hosting URL: https://g-weather-forecast-17f9c.web.app
+App APK: [weather_app_demo.apk](weather_app_demo.apk)
+```
+
+
 ## 1) Project Structure
 
 ```
@@ -104,7 +111,6 @@ Form validation: True
 State management: Bloc
 
 ```
-
 ### 3) Home Screen - Web Screen
 ![web_home_srceen.png](assets%2Fdemo%2Fweb_home_srceen.png)
 ![mobile_home_screen.png](assets%2Fdemo%2Fmobile_home_screen.png)
