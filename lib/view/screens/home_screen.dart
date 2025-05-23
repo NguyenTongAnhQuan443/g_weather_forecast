@@ -49,7 +49,12 @@ class _AppState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(flex: 1, child: _buildSearchPanel()),
-                Expanded(flex: 3, child: _buildWeatherPanel()),
+                Expanded(
+                  flex: 3,
+                  child: SingleChildScrollView(
+                    child: _buildWeatherPanel(),
+                  ),
+                ),
               ],
             );
           }
@@ -87,16 +92,13 @@ class _AppState extends State<HomeScreen> {
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                 border: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.grey[300]!),
+                  borderSide: BorderSide(color: Colors.grey[300]!),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Colors.grey[300]!),
+                  borderSide: BorderSide(color: Colors.grey[300]!),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.grey[400]!),
+                  borderSide: BorderSide(color: Colors.grey[400]!),
                 ),
               ),
               onSubmitted: (value) => _searchWeather(),
@@ -148,10 +150,9 @@ class _AppState extends State<HomeScreen> {
   Widget _buildWeatherPanel() {
     return BlocBuilder<WeatherBloc, WeatherState>(
       builder: (context, state) {
-
         // 1. Khi đang tải (WeatherLoading)
         if (state is WeatherLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator());
         }
 
         // 2. Khi thành công (WeatherLoaded)
@@ -218,8 +219,7 @@ class _AppState extends State<HomeScreen> {
                                       style:
                                           const TextStyle(color: Colors.white),
                                       maxLines: 2,
-                                      overflow: TextOverflow
-                                          .ellipsis,
+                                      overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
