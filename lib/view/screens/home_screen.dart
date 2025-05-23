@@ -11,6 +11,9 @@ import '../widgets/search_panel.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
+import '../widgets/subscribe_dialog.dart';
+import '../widgets/weather_history_dialog.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -71,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       String? city;
       try {
-        final placemarks = await placemarkFromCoordinates(pos.latitude, pos.longitude);
+        final placemarks =
+            await placemarkFromCoordinates(pos.latitude, pos.longitude);
         if (placemarks.isNotEmpty) {
           city = placemarks.first.locality ??
               placemarks.first.administrativeArea ??
@@ -85,10 +89,11 @@ class _HomeScreenState extends State<HomeScreen> {
         _searchController.text = city;
         _searchWeather();
       } else {
-
         // Nếu không resolve được city, truyền luôn lat,lng
         String latlng = '${pos.latitude},${pos.longitude}';
-        context.read<WeatherBloc>().add(FetchWeatherEvent(latlng, forecastDays: 10));
+        context
+            .read<WeatherBloc>()
+            .add(FetchWeatherEvent(latlng, forecastDays: 10));
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Lấy thời tiết theo GPS!')),
@@ -101,8 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
   }
-
-
 
   // Xử lý tìm kiếm thời tiết cho thành phố
   void _searchWeather() {
@@ -119,15 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text(
-      //     'Weather Dashboard',
-      //     style: TextStyle(
-      //         color: AppColors.textWhite, fontWeight: FontWeight.bold),
-      //   ),
-      //   backgroundColor: AppColors.primary,
-      //   centerTitle: true,
-      // ),
       appBar: AppBar(
         title: const Text(
           'Weather Dashboard',
@@ -137,59 +131,56 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppColors.primary,
         centerTitle: true,
         actions: [
-          PopupMenuButton<int>(
-            icon: Icon(Icons.more_horiz, color: AppColors.textWhite),
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert, color: Colors.white),
             onSelected: (value) async {
-              if (value == 1) {
-                // Ở đây mở dialog lịch sử
-                final history = await WeatherHistoryService.getTodayWeatherHistory();
+              if (value == 'history') {
+                // Show today’s history
+                final history =
+                    await WeatherHistoryService.getTodayWeatherHistory();
                 showDialog(
                   context: context,
-                  builder: (_) => AlertDialog(
-                    title: Text('Lịch sử tìm kiếm hôm nay'),
-                    content: SizedBox(
-                      width: 300,
-                      height: 350,
-                      child: history.isEmpty
-                          ? Text('Chưa có lịch sử tìm kiếm nào trong ngày.')
-                          : ListView.builder(
-                        itemCount: history.length,
-                        itemBuilder: (ctx, i) {
-                          final item = history[i];
-                          return ListTile(
-                            leading: Image.network(item.iconUrl, width: 32, height: 32),
-                            title: Text(item.cityName),
-                            subtitle: Text(
-                              'Nhiệt độ: ${item.temperatureC}°C\n'
-                                  'Thời gian: ${item.localtime}',
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        child: Text('Đóng'),
-                        onPressed: () => Navigator.of(context).pop(),
-                      )
-                    ],
+                  builder: (_) => WeatherHistoryDialog(history: history),
+                );
+              }
+              if (value == 'subscribe') {
+                // Show subscribe dialog
+                showDialog(
+                  context: context,
+                  builder: (_) => SubscribeDialog(
+                    onSubmit: (email, subscribe) {
+                      Navigator.of(context).pop();
+                      if (subscribe) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  'Subscription request sent! Please check your email.')),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Unsubscribe request sent!')),
+                        );
+                      }
+                    },
                   ),
                 );
               }
             },
             itemBuilder: (context) => [
               PopupMenuItem(
-                value: 1,
-                child: Text('Xem lịch sử hôm nay'),
+                value: 'history',
+                child: Text('View today’s history'),
+              ),
+              PopupMenuItem(
+                value: 'subscribe',
+                child: Text('Request weather notifications'),
               ),
             ],
           ),
         ],
       ),
-
       body: LayoutBuilder(
         builder: (context, constraints) {
-
           // Responsive layout: Hiển thị khác nhau cho mobile và web
           if (constraints.maxWidth > 800) {
             return Row(
