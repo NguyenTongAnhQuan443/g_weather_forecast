@@ -47,6 +47,9 @@ dev_dependencies:
   equatable: ^2.0.7
 #  dotenv
   flutter_dotenv: ^5.2.1
+#  GPS
+  geolocator: ^10.1.0
+  geocoding: ^3.0.0
 #  Icon
   flutter_launcher_icons: ^0.13.1 # ← thêm dòng này
 flutter_icons:
