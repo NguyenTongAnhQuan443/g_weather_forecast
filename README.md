@@ -1,4 +1,4 @@
-# g_weather_forecast
+# GOLDEN OWL SOLUTIONS - TEST Intern
 # Project Structure
 lib/
 │
@@ -40,3 +40,7 @@ lib/
 ├── main.dart              # Entry point
 ├── injection.dart         # Inject các service, repository, viewmodel (get_it)
 └── app.dart               # Widget MaterialApp, set up theme/font/provider
+
+# Home Screen - Web Screen
+![mobile_home_screen.png](assets%2Fdemo%2Fmobile_home_screen.png)
+![web_home_srceen.png](assets%2Fdemo%2Fweb_home_srceen.png)

@@ -38,6 +38,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+#  Icon
+  flutter_launcher_icons: ^0.13.1 # ← thêm dòng này
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/logoApp.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -85,5 +91,12 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+  fonts:
+    - family: Rubik
+      fonts:
+        - asset: assets/fonts/Rubik-Regular.ttf
+        - asset: assets/fonts/Rubik-Bold.ttf
+          weight: 700
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
