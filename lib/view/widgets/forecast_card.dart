@@ -12,7 +12,7 @@ class ForecastCard extends StatelessWidget {
     return Card(
       color: AppColors.grayapp,
       child: Container(
-        width: 170,
+        width: 150,
         padding: const EdgeInsets.fromLTRB(14, 20, 14, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
